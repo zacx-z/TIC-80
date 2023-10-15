@@ -1066,7 +1066,12 @@ static void evalMRuby(tic_mem* tic, const char* code) {
 
     mrbc_context* mrb_cxt = ((mrbVm*)machine->currentVM)->mrb_cxt = mrbc_context_new(mrb);
     mrbc_filename(mrb, mrb_cxt, "eval");
-    mrb_load_string_cxt(mrb, code, mrb_cxt);
+    mrb_value res=mrb_load_string_cxt(mrb, code, mrb_cxt);
+
+    const char* text = mrb_value_to_cstr(mrb, res);
+    mrb_int color = TIC_DEFAULT_COLOR;
+    machine->data->trace(machine->data->data, text, color);
+
     catcherr(machine);
 }
 
